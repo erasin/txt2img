@@ -41,10 +41,16 @@ func (t TxtImgCon) Get() {
 									{{.Date}}
 
 `
-	tc := &TextConvert{}
+	tc := &TextConvert{font: "/Library/Fonts/华文仿宋.ttf"}
 
 	tpMain, _ := template.New("main").Parse(tplMain)
 	tpMain.Execute(tc, map[string]string{"To": StrTo, "From": StrFrom, "Date": StrDate})
+
+	//bf := bufio.NewWriter(outFile)
+	//var b []byte
+	//bf := bufio.NewBufferString(&b)
+	//tpMain.Execute(bf, map[string]string{"To": StrTo, "From": StrFrom, "Date": StrDate})
+	//bf.Read()
 
 	tc.doImg()
 	tc.writeTo(t.Ctx.ResponseWriter)

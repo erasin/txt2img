@@ -7,9 +7,9 @@ import (
 	"image/draw"
 	"image/jpeg"
 	"image/png"
+	"io"
 	"io/ioutil"
 	"log"
-	"net/http"
 	"os"
 	"strings"
 
@@ -22,6 +22,7 @@ type TextConvert struct {
 	Text string
 	rgba *image.RGBA
 	png  string
+	font string
 }
 
 type textLine struct {
@@ -37,6 +38,9 @@ func (tc *TextConvert) sliptString(lines *list.List, lineSize int) (countAll int
 	texts := strings.Split(text, "\n")
 
 	for _, v := range texts {
+
+		//c := runewidth.StringWidth(v)
+
 		txt := []rune(v)
 		// 处理回车和换行
 		c := len(txt)
@@ -74,13 +78,23 @@ func (tc *TextConvert) sliptString(lines *list.List, lineSize int) (countAll int
 	return
 }
 
+func (tc *TextConvert) wrap(lines *list.List, lineSize int) (countAll int) {
+
+	text := WrapString(tc.Text, uint(lineSize))
+	texts := strings.Split(text, "\n")
+	countAll = len(texts)
+	for k, v := range texts {
+		lines.PushBack(textLine{v, k})
+	}
+	return
+}
+
 func (tc *TextConvert) Write(p []byte) (n int, err error) {
 	tc.Text += string(p)
 	return 0, nil
 }
 
 func (tc *TextConvert) doImg() {
-	var fontTTF = "/Library/Fonts/华文仿宋.ttf"
 	var size = 25.0
 	var dx = 500
 	var dy = 300
@@ -89,10 +103,11 @@ func (tc *TextConvert) doImg() {
 
 	// 计算行数以及拆解字符串
 	lines := list.New()
-	tl := tc.sliptString(lines, lineSize)
+	//tl := tc.sliptString(lines, lineSize)
+	tl := tc.wrap(lines, lineSize)
 	dy = tl * int(size)
 
-	fontb, err := ioutil.ReadFile(fontTTF)
+	fontb, err := ioutil.ReadFile(tc.font)
 	if err != nil {
 		log.Println(err)
 	}
@@ -126,7 +141,7 @@ func (tc *TextConvert) doImg() {
 	return
 }
 
-func (tc *TextConvert) writeTo(w http.ResponseWriter) {
+func (tc *TextConvert) writeTo(w io.Writer) {
 	//bf := bufio.NewWriter(w)
 	//err := png.Encode(w, tc.rgba)
 	err := jpeg.Encode(w, tc.rgba, &jpeg.Options{80})

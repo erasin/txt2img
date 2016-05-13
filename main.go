@@ -1,12 +1,9 @@
 package main
 
-import (
-	"log"
-	"net/http"
+import
 
-	"github.com/facebookgo/grace/gracehttp"
-	"github.com/lunny/tango"
-)
+//"github.com/facebookgo/grace/gracehttp"
+"github.com/lunny/tango"
 
 func main() {
 	tg := tango.Classic()
@@ -14,9 +11,9 @@ func main() {
 	//tg.Get("/:to/:from/:date", new(TxtImgCon))
 	tg.Get("/", new(TxtImgCon))
 
-	//tg.Run(":9092")
-	err := gracehttp.Serve(&http.Server{Addr: ":9092", Handler: tg})
-	if err != nil {
-		log.Fatalln(err)
-	}
+	tg.Run(":9092")
+	//err := gracehttp.Serve(&http.Server{Addr: ":9092", Handler: tg})
+	//if err != nil {
+	//	log.Fatalln(err)
+	//}
 }

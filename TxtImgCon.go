@@ -23,7 +23,9 @@ func (t TxtImgCon) Get() {
 `
 	var fields = map[string]string{"To": "", "Form": "", "Date": "222"}
 
-	fontPath := "/Library/Fonts/华文仿宋.ttf"
+	//fontPath := "/Library/Fonts/华文仿宋.ttf"
+	fontPath := "华文仿宋.ttf"
+
 	tc, err := NewTextConvert(fontPath)
 	if err != nil {
 		t.Error(err.Error())

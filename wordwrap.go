@@ -3,7 +3,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"unicode"
 
 	"github.com/mattn/go-runewidth"
@@ -63,7 +62,7 @@ func WrapString(s string, lim uint) string {
 		} else if runewidth.RuneWidth(char) > 1 {
 
 			// 双字节处理
-			fmt.Println(current + uint(spaceWidth+wordWidth))
+			//fmt.Println(current + uint(spaceWidth+wordWidth))
 			if current+uint(spaceWidth+wordWidth) >= lim {
 				wordBuf.WriteTo(buf)
 				wordBuf.Reset()
@@ -75,11 +74,11 @@ func WrapString(s string, lim uint) string {
 			} else {
 				wordBuf.WriteRune(char)
 				wordWidth += runewidth.RuneWidth(char)
-				fmt.Println(wordBuf.String())
-				fmt.Println(wordBuf.Len())
+				//fmt.Println(wordBuf.String())
+				//fmt.Println(wordBuf.Len())
 			}
 
-			fmt.Println(wordWidth)
+			//fmt.Println(wordWidth)
 		} else {
 
 			wordBuf.WriteRune(char)

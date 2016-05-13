@@ -23,7 +23,7 @@ type TextConvert struct {
 	Text string
 	rgba *image.RGBA
 	png  string
-	font string
+	Font string
 }
 
 // textLine 单行数据
@@ -32,9 +32,19 @@ type textLine struct {
 	Index int
 }
 
-// 字符串拆解
+// NewTextConvert 新建转换主体
+func NewTextConvert(ft string) (*TextConvert, error) {
+	_, err := os.Stat(ft)
+	if err != nil {
+		// 获取默认字体,打印输出错误
+		return &TextConvert{}, err
+	}
+	return &TextConvert{Font: ft}, nil
+}
+
+// sliptString 字符串拆解
 func (tc *TextConvert) sliptString(lines *list.List, lineSize int) (countAll int) {
-	log.Println(tc.Text)
+	//log.Println(tc.Text)
 	countAll = 0
 	text := strings.Replace(tc.Text, "\t", "    ", 0)
 	texts := strings.Split(text, "\n")
@@ -80,8 +90,8 @@ func (tc *TextConvert) sliptString(lines *list.List, lineSize int) (countAll int
 	return
 }
 
+// wrap 字符换行处理
 func (tc *TextConvert) wrap(lines *list.List, lineSize int) (countAll int) {
-
 	text := WrapString(tc.Text, uint(lineSize))
 	texts := strings.Split(text, "\n")
 	countAll = len(texts)
@@ -91,15 +101,17 @@ func (tc *TextConvert) wrap(lines *list.List, lineSize int) (countAll int) {
 	return
 }
 
+// Write 实现 io.Writer 接口 写入文字实体
 func (tc *TextConvert) Write(p []byte) (n int, err error) {
 	tc.Text += string(p)
 	return 0, nil
 }
 
-func (tc *TextConvert) doImg() {
+// EncodeImg 处理图片生成
+func (tc *TextConvert) EncodeImg() *TextConvert {
 	var size = 25.0
-	var dx = 500
-	var dy = 300
+	var dx = 1500
+	var dy = 1300
 
 	lineSize := int(dx / int(size))
 
@@ -109,7 +121,7 @@ func (tc *TextConvert) doImg() {
 	tl := tc.wrap(lines, lineSize)
 	dy = tl * int(size)
 
-	fontb, err := ioutil.ReadFile(tc.font)
+	fontb, err := ioutil.ReadFile(tc.Font)
 	if err != nil {
 		log.Println(err)
 	}
@@ -140,7 +152,7 @@ func (tc *TextConvert) doImg() {
 		c.DrawString(t.Text, pt)
 	}
 
-	return
+	return tc
 }
 
 func (tc *TextConvert) writeTo(w io.Writer) {

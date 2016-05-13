@@ -18,6 +18,7 @@ import (
 	//"github.com/unrolled/render"
 )
 
+// TextConvert 文本转化
 type TextConvert struct {
 	Text string
 	rgba *image.RGBA
@@ -25,6 +26,7 @@ type TextConvert struct {
 	font string
 }
 
+// textLine 单行数据
 type textLine struct {
 	Text  string
 	Index int
@@ -134,7 +136,7 @@ func (tc *TextConvert) doImg() {
 
 	for txt := lines.Front(); txt != nil; txt = txt.Next() {
 		t := txt.Value.(textLine)
-		pt := freetype.Pt(0, (t.Index+1)*intSize)
+		pt := freetype.Pt(0, (t.Index+2)*intSize)
 		c.DrawString(t.Text, pt)
 	}
 

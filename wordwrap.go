@@ -61,6 +61,8 @@ func WrapString(s string, lim uint) string {
 			spaceBuf.WriteRune(char)
 			spaceWidth += runewidth.RuneWidth(char)
 		} else if runewidth.RuneWidth(char) > 1 {
+
+			// 双字节处理
 			fmt.Println(current + uint(spaceWidth+wordWidth))
 			if current+uint(spaceWidth+wordWidth) >= lim {
 				wordBuf.WriteTo(buf)

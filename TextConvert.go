@@ -51,14 +51,10 @@ func (tc *TextConvert) sliptString(lines *list.List, lineSize int) (countAll int
 
 	for _, v := range texts {
 
-		//c := runewidth.StringWidth(v)
-
 		txt := []rune(v)
 		// 处理回车和换行
 		c := len(txt)
 		var count int
-
-		//log.Println(c/lineSize)
 
 		if n := c / lineSize; n <= 0 {
 			count = 1
@@ -66,25 +62,17 @@ func (tc *TextConvert) sliptString(lines *list.List, lineSize int) (countAll int
 			count = n + 1
 		}
 
-		//log.Println(c, count)
-
 		for j := 0; j < count; j++ {
 			start := j * lineSize
 			end := (j + 1) * lineSize
 			if j == count-1 {
-				//log.Println(start, end,countAll+j)
 				lines.PushBack(textLine{string(txt[start:]), countAll + j})
-				// t.Lines[j] = string(txt[start:])
 			} else {
-				//log.Println(start, end,countAll+j)
 				lines.PushBack(textLine{string(txt[start:end]), countAll + j})
-				// t.Lines[j] = string(txt[start:end])
 			}
 		}
 
 		countAll += count
-		//countAll += 1
-		//lines.PushBack(textLine{"",countAll})
 	}
 
 	return
@@ -159,8 +147,6 @@ func (tc *TextConvert) writeTo(w io.Writer) {
 	//bf := bufio.NewWriter(w)
 	//err := png.Encode(w, tc.rgba)
 	err := jpeg.Encode(w, tc.rgba, &jpeg.Options{80})
-
-	//err = png.Encode(bf, tc.rgba)
 	if err != nil {
 		log.Println(err)
 		os.Exit(1)

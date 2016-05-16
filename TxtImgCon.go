@@ -1,16 +1,14 @@
 package main
 
-import "github.com/lunny/tango"
-
-type TxtImgCon struct {
-	tango.Params
-	//tango.GZip
-	tango.Ctx
-	tango.Logger
-}
+import (
+	"fmt"
+	"net/http"
+)
 
 //func (t TxtImgCon) Get(w http.ResponseWriter, req *http.Request) {
-func (t TxtImgCon) Get() {
+
+func TxtImgConGet(w http.ResponseWriter, req *http.Request) {
+	req.ParseForm()
 
 	// 测试主体
 	var tplMain = `尊敬的 {{.To}}:
@@ -28,11 +26,11 @@ func (t TxtImgCon) Get() {
 
 	tc, err := NewTextConvert(fontPath)
 	if err != nil {
-		t.Error(err.Error())
+		fmt.Println(err.Error())
 	}
-	err = NewTpl(tplMain, fields).Encoder(t.Forms(), tc)
+	err = NewTpl(tplMain, fields).Encoder(req.Form, tc)
 	if err != nil {
-		t.Error(err.Error())
+		fmt.Println(err.Error())
 	}
-	tc.EncodeImg().writeTo(t.Ctx.ResponseWriter)
+	tc.EncodeImg().writeTo(w)
 }

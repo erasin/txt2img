@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"net/url"
 	"strings"
-
-	"github.com/lunny/tango"
 )
 
 type Tpl struct {
@@ -19,10 +18,10 @@ func NewTpl(t string, fs map[string]string) *Tpl {
 	return &Tpl{t, fs}
 }
 
-func (t *Tpl) Encoder(f *tango.Forms, w io.Writer) error {
+func (t *Tpl) Encoder(f url.Values, w io.Writer) error {
 	if len(t.Fields) > 0 {
-		for k, v := range t.Fields {
-			t.Fields[k] = f.MustString(strings.ToLower(k), v)
+		for k, _ := range t.Fields {
+			t.Fields[k] = f.Get(strings.ToLower(k))
 		}
 	}
 	fmt.Println(t.Fields)

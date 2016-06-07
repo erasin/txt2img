@@ -134,7 +134,9 @@ func (tc *TextConvert) EncodeImg() *TextConvert {
 	// faceWidth,ok := face.GlyphAdvance(rune("中"))
 	intSize := int(size)
 
-	for txt := lines.Front(); txt != nil; txt = txt.Next() {
+	var txtNext *list.Element
+	for txt := lines.Front(); txt != nil; txt = txtNext {
+		txtNext = txt.Next()
 		t := txt.Value.(textLine)
 		pt := freetype.Pt(0, (t.Index+2)*intSize)
 		c.DrawString(t.Text, pt)
@@ -146,7 +148,7 @@ func (tc *TextConvert) EncodeImg() *TextConvert {
 func (tc *TextConvert) writeTo(w io.Writer) {
 	//bf := bufio.NewWriter(w)
 	//err := png.Encode(w, tc.rgba)
-	err := jpeg.Encode(w, tc.rgba, &jpeg.Options{80})
+	err := jpeg.Encode(w, tc.rgba, &jpeg.Options{Quality: 80})
 	if err != nil {
 		log.Println(err)
 		os.Exit(1)

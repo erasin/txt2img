@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// Tpl 模板解析
 type Tpl struct {
 	Tpl    string
 	Fields map[string]string
@@ -18,9 +19,11 @@ func NewTpl(t string, fs map[string]string) *Tpl {
 	return &Tpl{t, fs}
 }
 
+// Encoder 解析模板为 go template
 func (t *Tpl) Encoder(f url.Values, w io.Writer) error {
 	if len(t.Fields) > 0 {
-		for k, _ := range t.Fields {
+		for k, v := range t.Fields {
+			_ := v
 			t.Fields[k] = f.Get(strings.ToLower(k))
 		}
 	}
